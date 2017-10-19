@@ -19,7 +19,7 @@ class AuthController
 
         $jsonObject = [
             "iss" => "reginaldorubens",
-            "aud" => "http://github.com/reginaldorubens/teste",
+            "aud" => "https://github.com/reginaldorubens/test-api-restful-silex",
             "iat" => time(), // Issued At Time
             "nbf" => time(), // Not Before Time
             "exp" => time()+60*60*24, // Expiration Time (24 hours)

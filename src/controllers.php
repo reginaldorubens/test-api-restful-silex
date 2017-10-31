@@ -5,10 +5,8 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Middleware\Auth;
 use App\Exception\UnauthorizedException;
 
-$app->post('/api/v1/login', 'App\Controller\AuthController::login');
-
 $app->mount('/api/v1', function ($api) use ($app) {
-    
+
     $api->get('/wines', 'App\Controller\WineController::listAll');
 
     $api->get('/wines/{id}', 'App\Controller\WineController::get');
@@ -19,16 +17,23 @@ $app->mount('/api/v1', function ($api) use ($app) {
 
     $api->delete('/wines/{id}', 'App\Controller\WineController::delete');
 
+    $api->post('/login', 'App\Controller\AuthController::login');
+
 })->before(function(Request $request) use ($app) {
     if (strpos($request->headers->get('Content-Type'), 'application/json') !== 0) {
-        return $app->json(['error' => 
+        return $app->json(['error' =>
             'Invalid Header Content-Type (Accepts only \'application/json\')'], 400);
     }
 
     $data = json_decode($request->getContent(), true);
 
     $request->request->replace(is_array($data) ? $data : array());
-    
+
+    // to not validate 'login' route
+    if ($request->get('_route') == 'POST_api_v1_login') {
+        return;
+    }
+
     Auth::validateToken($app, $request);
 });
 
@@ -45,6 +50,6 @@ $app->error(function (\Exception $e, Request $request, $code) use ($app) {
         return;
     }
 
-    return $app->json(['error' => 'Sorry, an error has occurred (' . 
+    return $app->json(['error' => 'Sorry, an error has occurred (' .
         $e->getMessage() . ')'], $code);
 });

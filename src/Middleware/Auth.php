@@ -29,6 +29,6 @@ class Auth
             throw new UnauthorizedException('Unauthorized', 401);
         }
 
-        $app['jwtPayload'] = $decodedJWT->payload;
+        $app['authUser'] = $decodedJWT->user;
     }
 }

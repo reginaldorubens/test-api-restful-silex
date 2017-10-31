@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Exception\UnauthorizedException;
 use Firebase\JWT\JWT;
 
-class Auth 
+class Auth
 {
     public static function validateToken(Application $app, Request $request)
     {
@@ -20,15 +20,15 @@ class Auth
         }
 
         $headerWithoutBearer = str_replace('Bearer ', '', $rawHeader);
-        
+
         $superSecretKey = $app['superSecretKey'];
-        
+
         try {
             $decodedJWT = JWT::decode($headerWithoutBearer, $superSecretKey, ['HS256']);
         }  catch (\Exception $e) {
             throw new UnauthorizedException('Unauthorized', 401);
         }
 
-        $app['payload'] = $decodedJWT->payload;
+        $app['jwtPayload'] = $decodedJWT->payload;
     }
 }

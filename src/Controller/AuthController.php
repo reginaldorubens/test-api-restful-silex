@@ -23,7 +23,7 @@ class AuthController
             "iat" => time(), // Issued At Time
             "nbf" => time(), // Not Before Time
             "exp" => time()+60*60*24, // Expiration Time (24 hours)
-            "payload" => [
+            "user" => [
                 "firstName" => "Reginaldo",
                 "lastName" => "Silva",
                 "title" => "Backend PHP Developer",
@@ -32,7 +32,7 @@ class AuthController
         ];
 
         $superSecretKey = $app['superSecretKey'];
-        
+
         $jsonWebToken = JWT::encode($jsonObject, $superSecretKey);
 
         return $app->json(['token' =>  $jsonWebToken], 200);

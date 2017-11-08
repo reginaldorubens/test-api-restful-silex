@@ -15,5 +15,3 @@ $capsule->addConnection([
 ]);
 
 $capsule->bootEloquent();
-
-?>

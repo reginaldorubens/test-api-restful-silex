@@ -12,23 +12,27 @@ class Auth
 {
     public static function validateToken(Application $app, Request $request)
     {
-        $rawHeader = $request->headers->get('Authorization');
-
-        if (strpos($rawHeader, 'Bearer ') === false) {
-            //return $app->json(['error' => 'Unauthorized'], 401);
-            throw new UnauthorizedException('Unauthorized', 401);
-        }
-
-        $headerWithoutBearer = str_replace('Bearer ', '', $rawHeader);
+        $headerWithoutBearer = $this->extractHeaderWithoutBearer(
+            $request->headers->get('Authorization');
+        );
 
         $superSecretKey = $app['superSecretKey'];
 
         try {
             $decodedJWT = JWT::decode($headerWithoutBearer, $superSecretKey, ['HS256']);
         }  catch (\Exception $e) {
-            throw new UnauthorizedException('Unauthorized', 401);
+            throw new UnauthorizedException();
         }
 
         $app['authUser'] = $decodedJWT->user;
+    }
+
+    private function extractHeaderWithoutBearer($rawHeader)
+    {
+        if (strpos($rawHeader, 'Bearer ') === false) {
+            throw new UnauthorizedException();
+        }
+
+        return str_replace('Bearer ', '', $rawHeader);
     }
 }

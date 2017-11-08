@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-class Wine extends \Illuminate\Database\Eloquent\Model
+use \Illuminate\Database\Eloquent\Model;
+
+class Wine extends Model
 {
     protected $table = 'wines';
 
     protected $fillable = [
-        'name', 
-        'color', 
-        'varietal', 
-        'harvest', 
+        'name',
+        'color',
+        'varietal',
+        'harvest',
         'region'
     ];
 }
